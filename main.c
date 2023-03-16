@@ -32,6 +32,20 @@ int main(int argc, char **argv) {
     char *todos = read_from_file(file_path, &content_size);
     fwrite(todos, 1, content_size, stdout);
 
+
+    /*
+    ** We should probably hold todos in an internal buffer
+    ** then at the end of the program exe, write out to file once.
+    ** struct Todo
+    ** struct Todos
+    **
+    ** todo struct will include all data that make up a todo or help handle a todo
+    ** todos struct will hold multiple Todos, the amount, size, etc.
+    **
+    ** this program will support cli mode + a ncurses gui mode (like gdb)
+     */
+
+
     // create_todo
     char *test_todo = "test todo\n";
     create_todo(file_path, test_todo);
@@ -43,11 +57,15 @@ int main(int argc, char **argv) {
 
     // delete_todo
     // edit_todo
+
+
+    if (todos) free(todos);
     return 0;
 }
 
 int create_todo(char *file_path, char *todo_content) {
-    // get the file, move cursor to end, write todo into it
+    // TODO: Instead of appending directly to the file, append to an internal buffer.
+
     FILE *file = fopen(file_path, "a");
     if (file == NULL) {
         fprintf(stderr, "ERROR: Couldn't open file (w): %s\n", file_path);
@@ -83,6 +101,7 @@ char *read_from_file(char *file_path, size_t *content_size) {
         goto error;
     }
 
+    // TODO: grab each todo by \n and add to a 2d array of todos
     buffer = malloc(cs * sizeof(char));
 
     size_t c = fread(buffer, 1, cs, file);
