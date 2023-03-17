@@ -13,7 +13,7 @@ typedef struct {
     char **todos_content;
 } Todos;
 
-void read_from_file(const char *file_path, Todos *todos);
+void read_from_file(const char *file_path, Todos *t);
 
 void handle_cli_args(int argc, char **argv) {
     if (argc > 0) {
@@ -26,6 +26,17 @@ void handle_cli_args(int argc, char **argv) {
     }
 }
 
+void debug_print_info(const Todos *t) {
+    if (DEBUG_MODE == true) {
+        printf("------START DEBUG INFO------\n");
+        printf("Total TODOs: %d\n", t->count);
+        for (int i = 0; i < t->count; i++) {
+            printf("[TODO #%d]: %s", i + 1, t->todos_content[i]);
+        }
+        printf("------END DEBUG INFO--------\n");
+    }
+}
+
 int main(int argc, char **argv) {
     handle_cli_args(argc, argv);
 
@@ -33,6 +44,8 @@ int main(int argc, char **argv) {
 
     todos.file_path = "./examples/todos";
     read_from_file(todos.file_path, &todos); // why path file_path separatly? Maybe it's worth passing each param needed from struct separately?
+
+    debug_print_info(&todos);
 
     // final clean up
     for (int i = 0; i < todos.count; i++) {
@@ -43,7 +56,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void read_from_file(const char *file_path, Todos *todos) {
+void read_from_file(const char *file_path, Todos *t) {
     char *buffer = {0};
 
     FILE *file = fopen(file_path, "r");
@@ -66,27 +79,26 @@ void read_from_file(const char *file_path, Todos *todos) {
 
     buffer = malloc(cs * sizeof(char));
 
-    todos->count = 0;
+    t->count = 0;
 
-    todos->todos_content = malloc(sizeof(char*));
+    t->todos_content = malloc(sizeof(char*));
 
     // so in this loop, we dynamically allocate memory for a variable num of todos.
     while (fgets(buffer, cs, file) != NULL) {
         // TODO: Error handling?
-        char *t = malloc(strlen(buffer) + 1);
+        char *at = malloc(strlen(buffer) + 1);
 
-        strcpy(t, buffer);
+        strcpy(at, buffer);
 
-        todos->todos_content = realloc(todos->todos_content, (todos->count + 1) * sizeof(char*));
+        t->todos_content = realloc(t->todos_content, (t->count + 1) * sizeof(char*));
 
-        todos->todos_content[todos->count] = t;
+        t->todos_content[t->count] = at;
 
-        todos->count++;
+        t->count++;
     }
 
-    printf("Total TODOs: %d\n", todos->count);
 
-    todos->content_size = cs;
+    t->content_size = cs;
 
 cleanup:
     if (file) fclose(file);
