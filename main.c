@@ -16,8 +16,8 @@ typedef struct {
 
 void read_from_file(const char *file_path, Todos *t);
 void create_todo(char *todo_body, Todos *t);
-void save_to_file(void);
 void edit_todo(int t_index, char *todo_body, Todos *t);
+void save_to_file(void);
 
 void handle_cli_args(int argc, char **argv) {
     if (argc > 0) {
