@@ -17,6 +17,7 @@ typedef struct {
 void read_from_file(const char *file_path, Todos *t);
 void create_todo(char *todo_body, Todos *t);
 void save_to_file(void);
+void edit_todo(int t_index, char *todo_body, Todos *t);
 
 void handle_cli_args(int argc, char **argv) {
     if (argc > 0) {
@@ -51,6 +52,18 @@ void debug_auto_test(Todos *t) {
         char *debug_test_todo = "here is a test todo\n";
         printf("TEST: Creating todo: %s\n", debug_test_todo);
         create_todo(debug_test_todo, t);
+        printf("----------------------------------------------------\n");
+        printf("TEST: Created TODO appended to file: %d\n", t->count);
+        for (int i = 0; i < t->count; i++) {
+            printf("[TODO #%d]: %s", i + 1, t->todos_content[i]);
+        }
+        printf("----------------------------------------------------\n");
+        printf("\n");
+
+        int t_index = 0;
+        char *debug_test_edit_todo = "this todo has been edited by debug_test\n";
+        printf("TEST: Editing todo #%d | -> %s\n", t_index, debug_test_edit_todo);
+        edit_todo(t_index, debug_test_edit_todo, t);
         printf("----------------------------------------------------\n");
         printf("TEST: Created TODO appended to file: %d\n", t->count);
         for (int i = 0; i < t->count; i++) {
@@ -149,6 +162,14 @@ void create_todo(char *todo_body, Todos *t) {
 
 cleanup:
     fclose(f);
+}
+
+void edit_todo(int t_index, char *todo_body, Todos *t) {
+    (void) t_index;
+    (void) todo_body;
+    (void) t;
+
+    printf("edit_todo not implemented.\n");
 }
 
 void save_to_file(void) {
