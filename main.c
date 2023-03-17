@@ -165,11 +165,30 @@ cleanup:
 }
 
 void edit_todo(int t_index, char *todo_body, Todos *t) {
-    (void) t_index;
-    (void) todo_body;
-    (void) t;
+    FILE *f = fopen(t->file_path, "w");
+    if (f == NULL) {
+        fprintf(stderr, "ERROR edit_todo: Could not open file %s\n", t->file_path);
+        goto cleanup;
+    }
 
-    printf("edit_todo not implemented.\n");
+    // TODO: I believe I should update the ->content_size.
+    // After updating, creating, etc. The t->content_size is no longer valid
+    // until it reads the file again (program re-execution).
+    // I could technically just reread the file again to update the size?
+    // Or I could just do that here (and in other functions, edit, etc.)
+
+    t->todos_content[t_index][0] = 0;
+
+    t->todos_content[t_index] = realloc(t->todos_content[t_index], (strlen(todo_body) + 1) * sizeof(char));
+
+    strcpy(t->todos_content[t_index], todo_body);
+
+    for (int i = 0; i < t->count; i++) {
+        fputs(t->todos_content[i], f);
+    }
+
+cleanup:
+    if (f) fclose(f);
 }
 
 void save_to_file(void) {
