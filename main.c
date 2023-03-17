@@ -13,7 +13,9 @@ typedef struct {
     char **todos_content;
 } Todos;
 
+
 void read_from_file(const char *file_path, Todos *t);
+void save_to_file(void);
 
 void handle_cli_args(int argc, char **argv) {
     if (argc > 0) {
@@ -27,6 +29,7 @@ void handle_cli_args(int argc, char **argv) {
 }
 
 void debug_print_info(const Todos *t) {
+    // TODO: Move to external file?
     if (DEBUG_MODE == true) {
         printf("------START DEBUG INFO------\n");
         printf("Total TODOs: %d\n", t->count);
@@ -103,4 +106,10 @@ void read_from_file(const char *file_path, Todos *t) {
 cleanup:
     if (file) fclose(file);
     if (buffer) free(buffer);
+}
+
+void save_to_file(void) {
+    // TODO: Implement a save to file function
+    // after creating, editing, deleting, etc. Save the todos to the file
+    printf("save_to_file not implemented.\n");
 }
