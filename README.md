@@ -9,9 +9,9 @@ This is the second attempt after this [one](https://github.com/subwafer/todoclic
 ## Features
 
 - [x] Load from a "todo" file
-- [ ] Save to file 'todo'
-- [ ] Create new todos
-- [ ] Edit todos
+- [x] Save to file 'todo'
+- [x] Create new todos
+- [x] Edit todos
 - [ ] Archive todos
 - [ ] Trash todos
 - [ ] Delete todos
