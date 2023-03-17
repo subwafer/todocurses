@@ -34,10 +34,6 @@ int main(int argc, char **argv) {
     todos.file_path = "./examples/todos";
     read_from_file(todos.file_path, &todos); // why path file_path separatly? Maybe it's worth passing each param needed from struct separately?
 
-    if (todos.todos_content == NULL) {
-        printf("TODOS_CONTENT == NULL\n");
-    }
-
     // final clean up
     for (int i = 0; i < todos.count; i++) {
         free(todos.todos_content[i]);
