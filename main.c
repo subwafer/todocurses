@@ -17,6 +17,7 @@ typedef struct {
 void read_from_file(const char *file_path, Todos *t);
 void create_todo(char *todo_body, Todos *t);
 void edit_todo(int t_index, char *todo_body, Todos *t);
+void archive_todo(void);
 void save_to_file(void);
 
 void handle_cli_args(int argc, char **argv) {
@@ -189,6 +190,16 @@ void edit_todo(int t_index, char *todo_body, Todos *t) {
 
 cleanup:
     if (f) fclose(f);
+}
+
+void archive_todo(void) {
+    // TODO: Implement archive_todo
+    // Idea: make an archive struct. This can hold the index of the todo, the contents
+    // if the user decides to "unarchive", we can then easily place it back into the correct index of Todos.todos_content
+    // store the archive buffer into a file for persistence
+    // load the archive on launch
+    // create dir + file if doesn't exist, etc.
+    printf("archive_todo not implemented yet.\n");
 }
 
 void save_to_file(void) {
