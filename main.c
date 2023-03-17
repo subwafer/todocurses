@@ -15,6 +15,7 @@ typedef struct {
 
 
 void read_from_file(const char *file_path, Todos *t);
+void create_todo(char *todo_body, Todos *t);
 void save_to_file(void);
 
 void handle_cli_args(int argc, char **argv) {
@@ -28,16 +29,41 @@ void handle_cli_args(int argc, char **argv) {
     }
 }
 
-void debug_print_info(const Todos *t) {
-    // TODO: Move to external file?
+void debug_auto_test(Todos *t) {
+    // this will run tests on the funcs. and display the outputs to stdout.
+    // probably worth pulling out into it's own file.
+
     if (DEBUG_MODE == true) {
-        printf("------START DEBUG INFO------\n");
-        printf("Total TODOs: %d\n", t->count);
+        printf("------START DEBUG AUTO TEST------\n");
+
+        t->file_path = "./examples/todos";
+        printf("TEST: Reading file: %s\n\n", t->file_path);
+        read_from_file(t->file_path, t); // why path file_path separatly? Maybe it's worth passing each param needed from struct separately?
+
+        printf("----------------------------------------------------\n");
+        printf("TEST: Total TODOs read in from file: %d\n", t->count);
         for (int i = 0; i < t->count; i++) {
             printf("[TODO #%d]: %s", i + 1, t->todos_content[i]);
         }
-        printf("------END DEBUG INFO--------\n");
+        printf("----------------------------------------------------\n");
+        printf("\n");
+
+        char *debug_test_todo = "here is a test todo\n";
+        printf("TEST: Creating todo: %s\n", debug_test_todo);
+        create_todo(debug_test_todo, t);
+        printf("----------------------------------------------------\n");
+        printf("TEST: Created TODO appended to file: %d\n", t->count);
+        for (int i = 0; i < t->count; i++) {
+            printf("[TODO #%d]: %s", i + 1, t->todos_content[i]);
+        }
+        printf("----------------------------------------------------\n");
+
+        printf("\n");
+        printf("------END DEBUG AUTO TEST--------\n");
     }
+
+    // if we call this, we just exit the program.
+    exit(0);
 }
 
 int main(int argc, char **argv) {
@@ -45,10 +71,7 @@ int main(int argc, char **argv) {
 
     Todos todos;
 
-    todos.file_path = "./examples/todos";
-    read_from_file(todos.file_path, &todos); // why path file_path separatly? Maybe it's worth passing each param needed from struct separately?
-
-    debug_print_info(&todos);
+    debug_auto_test(&todos);
 
     // final clean up
     for (int i = 0; i < todos.count; i++) {
@@ -100,12 +123,32 @@ void read_from_file(const char *file_path, Todos *t) {
         t->count++;
     }
 
-
     t->content_size = cs;
 
 cleanup:
     if (file) fclose(file);
     if (buffer) free(buffer);
+}
+
+void create_todo(char *todo_body, Todos *t) {
+    // TODO: Add more logging and error handling
+    FILE *f = fopen(t->file_path, "a");
+    if (f == NULL) {
+        fprintf(stderr, "ERROR create_todo: Could not open file %s\n", t->file_path);
+        goto cleanup;
+    }
+
+    // add to t->todos_content buffer
+    t->todos_content = realloc(t->todos_content, (t->count + 1) * sizeof(char*));
+
+    t->todos_content[t->count] = todo_body;
+
+    t->count++;
+
+    fwrite(todo_body, 1, strlen(todo_body), f);
+
+cleanup:
+    fclose(f);
 }
 
 void save_to_file(void) {
