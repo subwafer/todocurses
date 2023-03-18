@@ -42,6 +42,9 @@ void debug_auto_test(Todos *t) {
         printf("TEST: Reading file: %s\n\n", t->file_path);
         read_from_file(t->file_path, t); // why path file_path separatly? Maybe it's worth passing each param needed from struct separately?
 
+        printf("t->count: %d\n", t->count);
+        printf("t->content_size: %zu\n", t->content_size);
+
         printf("----------------------------------------------------\n");
         printf("TEST: Total TODOs read in from file: %d\n", t->count);
         for (int i = 0; i < t->count; i++) {
